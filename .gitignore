@@ -1,0 +1,22 @@
+# env files.
+*.env
+.env*
+
+# macOS files.
+.DS_Store
+
+# linux files.
+*~
+.cache/
+*.swp
+
+# log files.
+logs/
+*.log
+*.out
+
+# editor files.
+.idea/
+.vscode/
+*.sublime*
+*.code-workspace
