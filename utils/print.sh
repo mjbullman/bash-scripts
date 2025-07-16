@@ -18,11 +18,11 @@ function print_update_message() {
 }
 
 function print_success() {
-    printf "${GREEN_TEXT}✅ %s${RESET_TEXT}\n" "$1"
+    printf "${GREEN_TEXT}✅  %s${RESET_TEXT}\n" "$1"
 }
 
 function print_error() {
-    printf "${RED_TEXT}❌ %s${RESET_TEXT}\n" "$1"
+    printf "${RED_TEXT}❌  %s${RESET_TEXT}\n" "$1"
 }
 
 function print_warning() {

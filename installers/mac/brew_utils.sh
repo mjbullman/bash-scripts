@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-source "../../utils/print.sh"
+source ../../utils/print.sh
 
 function check_package_installed() {
     brew list | grep -q "$1"
