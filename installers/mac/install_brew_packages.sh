@@ -6,14 +6,14 @@ source ./brew_utils.sh
 
 print_banner "MacOS System Configuration"
 
-# Check if Homebrew is installed
+# check if Homebrew is installed
 if ! command -v brew &> /dev/null; then
     print_warning "Homebrew not found. Installing Homebrew..."
     install_homebrew
     print_success "Homebrew installed successfully!"
 fi
 
-# Update Homebrew
+# update Homebrew
 print_section "Updating Homebrew"
 update_homebrew
 print_success "Homebrew updated successfully!"
