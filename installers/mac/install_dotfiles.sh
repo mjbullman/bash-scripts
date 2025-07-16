@@ -85,14 +85,14 @@ function install_ghosty_config() {
     if [[ -f "ghostty.config" ]]; then
         print_banner "Installing Ghostty Configuration"
 
-        if ! folder_exists "$CONFIG_DIR"; then
+        if ! folder_exists "$CONFIG_DIR/ghostty"; then
             mkdir "$CONFIG_DIR/ghostty"
         fi
 
         if ln -sf "$DOTFILES_DIR/ghostty.config" "$CONFIG_DIR/ghostty/config"; then
-          print_success "starship.toml installed!"
+          print_success "ghostty.config installed!"
         else
-          print_error "Failed to install starship.toml!"
+          print_error "Failed to install ghostty.config!"
         fi
     fi
 }
