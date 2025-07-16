@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
 
 # source utilities.
-source ../utils/print.sh
-source ../utils/folders.sh
+source ../../utils/print.sh
+source ../../utils/folders.sh
 
 # configuration
 CONFIG_DIR="$HOME/.config"
