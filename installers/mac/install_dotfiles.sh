@@ -47,31 +47,41 @@ function setup_repository() {
 
 function install_oh_my_zsh() {
     print_banner "Installing OhMyZsh Configurations"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-    if git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions; then
-        print_success "ZSH Autosuggestion Installed!"
+    local custom_plugins="$HOME/.oh-my-zsh/custom/plugins"
+    local zsh_completions_path="$custom_plugins/zsh-completions"
+    local zsh_autosuggestions_path="$custom_plugins/zsh-autosuggestions"
+    local zsh_syntax_highlighting_path="$custom_plugins/zsh-syntax-highlighting"
+    local zsh_history_search_path="$custom_plugins/zsh-history-substring-search"
+
+    # Install Oh My Zsh (only if not already installed)
+    if [ ! -d "$HOME/.oh-my-zsh" ]; then
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     else
-        print_error "Failed to Install ZSH Autosuggestions!"
+        print_info "Oh My Zsh already installed."
     fi
 
-    if git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting; then
-       print_success "ZSH Syntax Highlighting Installed!"
-    else
-        print_error "Failed to Install ZSH Syntax Highlighting!"
-    fi
-    
-    if git clone https://github.com/zsh-users/zsh-completions.git ~/.oh-my-zsh/custom/plugins/zsh-completions; then
-        print_success "ZSH Completions Installed!"
-    else
-        print_error "Failed to Install ZSH Completions!"
-    fi    
+    # Function to clone plugin if not already present
+    clone_plugin() {
+        local repo=$1
+        local path=$2
+        local name=$3
 
-    if git clone https://github.com/zsh-users/zsh-history-substring-search.git ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search; then
-        print_success "ZSH History Search intalled!"
-    else
-        print_error "Failed to Intall ZSH History Search!"
-    fi
+        if [ ! -d "$path" ]; then
+            if git clone "$repo" "$path"; then
+                print_success "$name Installed!"
+            else
+                print_error "Failed to Install $name!"
+            fi
+        else
+            print_info "$name already installed."
+        fi
+    }
+
+    clone_plugin "https://github.com/zsh-users/zsh-completions.git" "$zsh_completions_path" "ZSH Completions"
+    clone_plugin "https://github.com/zsh-users/zsh-autosuggestions.git" "$zsh_autosuggestions_path" "ZSH Autosuggestions"
+    clone_plugin "https://github.com/zsh-users/zsh-syntax-highlighting.git" "$zsh_syntax_highlighting_path" "ZSH Syntax Highlighting"
+    clone_plugin "https://github.com/zsh-users/zsh-history-substring-search.git" "$zsh_history_search_path" "ZSH History Search"
 }
 
 function install_zsh_configs() {
