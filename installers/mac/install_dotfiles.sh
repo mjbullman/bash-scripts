@@ -45,6 +45,35 @@ function setup_repository() {
     fi
 }
 
+function install_oh_my_zsh() {
+    print_banner "Installing OhMyZsh Configurations"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+    if git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions; then
+        print_success "ZSH Autosuggestion Installed!"
+    else
+        print_error "Failed to Install ZSH Autosuggestions!"
+    fi
+
+    if git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting; then
+       print_success "ZSH Syntax Highlighting Installed!"
+    else
+        print_error "Failed to Install ZSH Syntax Highlighting!"
+    fi
+    
+    if git clone https://github.com/zsh-users/zsh-completions.git ~/.oh-my-zsh/custom/plugins/zsh-completions; then
+        print_success "ZSH Completions Installed!"
+    else
+        print_error "Failed to Install ZSH Completions!"
+    fi    
+
+    if git clone https://github.com/zsh-users/zsh-history-substring-search.git ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search; then
+        print_success "ZSH History Search intalled!"
+    else
+        print_error "Failed to Intall ZSH History Search!"
+    fi
+}
+
 function install_zsh_configs() {
     # install .zshrc
     if [[ -f ".zshrc" ]]; then
@@ -193,6 +222,7 @@ main() {
     fi
 
     # install configurations
+    install_oh_my_zsh
     install_zsh_configs
     install_ghosty_config
     install_starship_config
