@@ -232,9 +232,9 @@ main() {
     fi
 
     # install configurations
-    install_oh_my_zsh
-    install_zsh_configs
-    install_ghosty_config
+    #install_oh_my_zsh
+    #install_zsh_configs
+    #install_ghosty_config
     install_starship_config
     install_tmux_config
     install_neovim_config
