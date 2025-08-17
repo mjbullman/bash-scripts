@@ -114,7 +114,7 @@ function install_starship_config() {
     if [[ -f "starship.toml" ]]; then
         print_banner "Installing Starship Configuration"
 
-        if ln -sf "$DOTFILES_DIR/.starship.toml" "$CONFIG_DIR/.starship.toml"; then
+        if ln -sf "$DOTFILES_DIR/starship.toml" "$CONFIG_DIR/starship.toml"; then
           print_success "starship.toml installed!"
         else
             print_error "Failed to install starship.toml!"
