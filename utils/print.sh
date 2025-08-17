@@ -10,27 +10,27 @@ GRAY_TEXT="\033[1;90m"     # Bright Gray (for muted text)
 RESET_TEXT="\033[0m"
 
 function print_install_message() {
-    printf "${BLUE_TEXT}🛠Installing: %s ${RESET_TEXT}\n" "$1"
+    printf "${BLUE_TEXT}🛠 Installing: %s ${RESET_TEXT}\n" "$1"
 }
 
 function print_update_message() {
-    printf "${BLUE_TEXT}🔄Updating: %s ${RESET_TEXT}\n" "$1"
+    printf "${BLUE_TEXT}🔄 Updating: %s ${RESET_TEXT}\n" "$1"
 }
 
 function print_success() {
-    printf "${GREEN_TEXT}✅  %s${RESET_TEXT}\n" "$1"
+    printf "${GREEN_TEXT}✅ %s${RESET_TEXT}\n" "$1"
 }
 
 function print_error() {
-    printf "${RED_TEXT}❌  %s${RESET_TEXT}\n" "$1"
+    printf "${RED_TEXT}❌ %s${RESET_TEXT}\n" "$1"
 }
 
 function print_warning() {
-    printf "${YELLOW_TEXT}⚠️  %s${RESET_TEXT}\n" "$1"
+    printf "${YELLOW_TEXT}⚠️ %s${RESET_TEXT}\n" "$1"
 }
 
 function print_info() {
-    printf "${BLUE_TEXT}ℹ️  %s${RESET_TEXT}\n" "$1"
+    printf "${BLUE_TEXT}ℹ️ %s${RESET_TEXT}\n" "$1"
 }
 
 function print_section() {
