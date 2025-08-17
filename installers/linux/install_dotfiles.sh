@@ -54,14 +54,14 @@ function install_oh_my_zsh() {
     local zsh_syntax_highlighting_path="$custom_plugins/zsh-syntax-highlighting"
     local zsh_history_search_path="$custom_plugins/zsh-history-substring-search"
 
-    # Install Oh My Zsh (only if not already installed)
+    # install Oh My Zsh (only if not already installed)
     if [ ! -d "$HOME/.oh-my-zsh" ]; then
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     else
         print_info "Oh My Zsh already installed."
     fi
 
-    # Function to clone plugin if not already present
+    # function to clone plugin if not already present
     clone_plugin() {
         local repo=$1
         local path=$2
@@ -85,6 +85,8 @@ function install_oh_my_zsh() {
 }
 
 function install_zsh_configs() {
+    chsh -s $(which zsh)
+
     # install .zshrc
     if [[ -f ".zshrc" ]]; then
         print_banner "Installing Zsh Configurations"
@@ -232,9 +234,9 @@ main() {
     fi
 
     # install configurations
-    #install_oh_my_zsh
-    #install_zsh_configs
-    #install_ghosty_config
+    install_oh_my_zsh
+    install_zsh_configs
+    install_ghosty_config
     install_starship_config
     install_tmux_config
     install_neovim_config
