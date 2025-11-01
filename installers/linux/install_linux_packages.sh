@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # source utilities and packages.
-source ./packages.conf
+source ../packages.shared.conf
+source ../packages.linux.conf
 source ./bash_utils.sh
 
 print_banner "Linux System Configuration"

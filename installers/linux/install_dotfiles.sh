@@ -241,7 +241,7 @@ main() {
     install_tmux_config
     install_neovim_config
     install_neofetch_config
-    
+
     print_banner "Installation Complete!"
     print_success "Your dot-files have been installed successfully! 🎉"
 }
