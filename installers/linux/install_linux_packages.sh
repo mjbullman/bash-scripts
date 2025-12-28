@@ -31,6 +31,11 @@ if [[ -n "${CASKS[@]}" ]]; then
     install_package_category "Casks" "${CASKS[@]}"
 fi
 
+# install AI tools (if defined)
+if [[ -n "${AI[@]}" ]]; then
+    install_package_category "AI" "${AI[@]}"
+fi
+
 # # install fonts (if defined)
 # if [[ -n "${FONTS[@]}" ]]; then
 #     install_package_category "Fonts" "${FONTS[@]}"
