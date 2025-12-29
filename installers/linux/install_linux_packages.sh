@@ -13,6 +13,7 @@ print_success "System updated successfully!"
 
 
 # INSTALL LINUX SPECIFIC PACKAGES.
+
 # install system utilities
 if [[ -n "${SYSTEM_UTILS_LINUX[@]}" ]]; then
     install_package_category "System Utilities Linux" "${SYSTEM_UTILS_LINUX[@]}"
@@ -43,6 +44,11 @@ fi
 
 # install AI tools (if defined)
 if [[ -n "${AI_CLI[@]}" ]]; then
+    # install claude code
+    curl -fsSL https://claude.ai/install.sh | bash
+    # install opencode
+    curl -fsSL https://opencode.ai/install | bash
+
     install_package_category "AI_CLI" "${AI_CLI[@]}"
 fi
 
