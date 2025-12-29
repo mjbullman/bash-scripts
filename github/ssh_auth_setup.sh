@@ -40,3 +40,4 @@ echo
 echo "Testing SSH connection to GitHub..."
 ssh -T git@github.com
 
+
