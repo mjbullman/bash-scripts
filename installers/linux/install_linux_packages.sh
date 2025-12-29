@@ -11,6 +11,16 @@ print_section "Updating System"
 update_system
 print_success "System updated successfully!"
 
+
+# INSTALL LINUX SPECIFIC PACKAGES.
+# install system utilities
+if [[ -n "${SYSTEM_UTILS_LINUX[@]}" ]]; then
+    install_package_category "System Utilities Linux" "${SYSTEM_UTILS_LINUX[@]}"
+fi
+
+
+# INSTALL SHARED PACKAGES
+
 # install system utilities
 if [[ -n "${SYSTEM_UTILS[@]}" ]]; then
     install_package_category "System Utilities" "${SYSTEM_UTILS[@]}"
@@ -32,8 +42,8 @@ if [[ -n "${CASKS[@]}" ]]; then
 fi
 
 # install AI tools (if defined)
-if [[ -n "${AI[@]}" ]]; then
-    install_package_category "AI" "${AI[@]}"
+if [[ -n "${AI_CLI[@]}" ]]; then
+    install_package_category "AI_CLI" "${AI_CLI[@]}"
 fi
 
 # # install fonts (if defined)
