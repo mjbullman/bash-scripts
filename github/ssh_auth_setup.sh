@@ -10,7 +10,7 @@ print_banner "GitHub SSH Key Setup"
 
 # set email for key
 EMAIL="martin.j.bullman@pm.me"
-KEY_PATH="$HOME/.ssh/id_ed25519"
+KEY_PATH="$HOME/.ssh/id_ed25520"
 
 # generate SSH key if it doesn't exist
 if [[ -f "$KEY_PATH" ]]; then
