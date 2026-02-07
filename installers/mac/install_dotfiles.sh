@@ -23,7 +23,7 @@ function create_config_directory {
 
 function setup_repository() {
     print_banner "Setting Up Repository"
-    
+
     if [[ -d "$DOTFILES_DIR" ]]; then
         print_info "Repository already exists, updating..."
 
@@ -132,6 +132,22 @@ function install_ghosty_config() {
           print_success "ghostty.config installed!"
         else
           print_error "Failed to install ghostty.config!"
+        fi
+    fi
+}
+
+function install_opencode_config() {
+    if [[ -f "opencode.jsonc" ]]; then
+        print_banner "Installing Opencode Configuration"
+
+        if ! folder_exists "$CONFIG_DIR/opencode"; then
+            mkdir "$CONFIG_DIR/opendode"
+        fi
+
+        if ln -sf "$DOTFILES_DIR/opencode.jsonc" "$CONFIG_DIR/opencode/opencode.jsonc"; then
+          print_success "opencode.jsonc installed!"
+        else
+          print_error "Failed to install opencode.jsonc!"
         fi
     fi
 }
