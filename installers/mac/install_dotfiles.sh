@@ -141,7 +141,7 @@ function install_opencode_config() {
         print_banner "Installing Opencode Configuration"
 
         if ! folder_exists "$CONFIG_DIR/opencode"; then
-            mkdir "$CONFIG_DIR/opendode"
+            mkdir "$CONFIG_DIR/opencode"
         fi
 
         if ln -sf "$DOTFILES_DIR/opencode.jsonc" "$CONFIG_DIR/opencode/opencode.jsonc"; then
@@ -185,17 +185,10 @@ function install_tmux_config() {
 }
 
 install_neovim_config() {
-    local neovim_dir="$CONFIG_DIR/nvim/"
-
     if [[ -d "neovim" ]]; then
         print_banner "Installing Neovim Configuration"
 
-        # create nvim folder if it does not exist.
-        if [[ ! -d "$neovim_dir" ]]; then
-          mkdir "$neovim_dir"
-        fi
-
-        if cp -r neovim/* "$neovim_dir"; then
+        if ln -sf "$DOTFILES_DIR/neovim" "$CONFIG_DIR/nvim"; then
             print_success "Neovim configuration installed"
         else
             print_error "Failed to install Neovim configuration"
