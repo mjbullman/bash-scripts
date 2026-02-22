@@ -156,14 +156,28 @@ function install_lazygit_config() {
     if [[ -f "config.yml" ]]; then
         print_banner "Installing Lazygit Configuration"
 
+        # symlink to ~/.config/lazygit/config.yml
         if ! folder_exists "$CONFIG_DIR/lazygit"; then
             mkdir "$CONFIG_DIR/lazygit"
         fi
 
         if ln -sf "$DOTFILES_DIR/config.yml" "$CONFIG_DIR/lazygit/config.yml"; then
-          print_success "config.yml installed!"
+          print_success "config.yml installed to ~/.config/lazygit/"
         else
-          print_error "Failed to install config.yml!"
+          print_error "Failed to install config.yml to ~/.config/lazygit/!"
+        fi
+
+        # symlink to ~/Library/Application Support/lazygit/config.yml (macOS)
+        local mac_lazygit_dir="$HOME/Library/Application Support/lazygit"
+
+        if ! folder_exists "$mac_lazygit_dir"; then
+            mkdir -p "$mac_lazygit_dir"
+        fi
+
+        if ln -sf "$DOTFILES_DIR/config.yml" "$mac_lazygit_dir/config.yml"; then
+          print_success "config.yml installed to ~/Library/Application Support/lazygit/"
+        else
+          print_error "Failed to install config.yml to ~/Library/Application Support/lazygit/!"
         fi
     fi
 }
