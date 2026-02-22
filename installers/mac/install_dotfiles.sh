@@ -152,6 +152,22 @@ function install_opencode_config() {
     fi
 }
 
+function install_lazygit_config() {
+    if [[ -f "config.yml" ]]; then
+        print_banner "Installing Lazygit Configuration"
+
+        if ! folder_exists "$CONFIG_DIR/lazygit"; then
+            mkdir "$CONFIG_DIR/lazygit"
+        fi
+
+        if ln -sf "$DOTFILES_DIR/config.yml" "$CONFIG_DIR/lazygit/config.yml"; then
+          print_success "config.yml installed!"
+        else
+          print_error "Failed to install config.yml!"
+        fi
+    fi
+}
+
 function install_tmux_config() {
     local tpm_dir="$HOME/.tmux/plugins/tpm"
 
@@ -248,7 +264,8 @@ main() {
     install_tmux_config
     install_neovim_config
     install_neofetch_config
-    
+    install_opencode_config
+    install_lazygit_config
     print_banner "Installation Complete!"
     print_success "Your dot-files have been installed successfully! 🎉"
 }
