@@ -84,6 +84,18 @@ function install_oh_my_zsh() {
     clone_plugin "https://github.com/zsh-users/zsh-history-substring-search.git" "$zsh_history_search_path" "ZSH History Search"
 }
 
+function install_gitconfig() {
+    if [[ -f ".gitconfig" ]]; then
+        print_banner "Installing Git Configuration"
+
+        if ln -sf "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"; then
+            print_success ".gitconfig installed!"
+        else
+            print_error "Failed to install .gitconfig!"
+        fi
+    fi
+}
+
 function install_zsh_configs() {
     # install .zshrc
     if [[ -f ".zshrc" ]]; then
@@ -272,6 +284,7 @@ main() {
 
     # install configurations
     install_oh_my_zsh
+    install_gitconfig
     install_zsh_configs
     install_ghosty_config
     install_starship_config
