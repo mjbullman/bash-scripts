@@ -96,6 +96,32 @@ function install_gitconfig() {
     fi
 }
 
+function install_gitconfig_local() {
+    print_banner "Installing Local Git Configuration"
+
+    if [[ -f "$HOME/.gitconfig.local" ]]; then
+        print_info "~/.gitconfig.local already exists, skipping."
+        return
+    fi
+
+    print_info "~/.gitconfig.local not found. Creating from user input..."
+    read -rp "  Enter your git name:  " git_name
+    read -rp "  Enter your git email: " git_email
+
+    cat > "$HOME/.gitconfig.local" <<EOF
+[user]
+	name = $git_name
+	email = $git_email
+	signingKey = ""
+EOF
+
+    if [[ -f "$HOME/.gitconfig.local" ]]; then
+        print_success "~/.gitconfig.local created!"
+    else
+        print_error "Failed to create ~/.gitconfig.local!"
+    fi
+}
+
 function install_zsh_configs() {
     # install .zshrc
     if [[ -f ".zshrc" ]]; then
@@ -285,6 +311,7 @@ main() {
     # install configurations
     install_oh_my_zsh
     install_gitconfig
+    install_gitconfig_local
     install_zsh_configs
     install_ghosty_config
     install_starship_config
