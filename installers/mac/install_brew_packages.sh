@@ -20,22 +20,22 @@ update_homebrew
 print_success "Homebrew updated successfully!"
 
 # install system utilities
-if [[ -n "${SYSTEM_UTILS[@]}" ]]; then
+if [[ ${#SYSTEM_UTILS[@]} -gt 0 ]]; then
     install_package_category "System Utilities" "${SYSTEM_UTILS[@]}"
 fi
 
 # install development tools (if defined)
-if [[ -n "${NETWORKING_TOOLS[@]}" ]]; then
+if [[ ${#NETWORKING_TOOLS[@]} -gt 0 ]]; then
     install_package_category "Networking Tools" "${NETWORKING_TOOLS[@]}"
 fi
 
 # install development tools (if defined)
-if [[ -n "${DEV_TOOLS[@]}" ]]; then
+if [[ ${#DEV_TOOLS[@]} -gt 0 ]]; then
     install_package_category "Development Tools" "${DEV_TOOLS[@]}"
 fi
 
 # install casks (if defined)
-if [[ -n "${CASKS[@]}" ]]; then
+if [[ ${#CASKS[@]} -gt 0 ]]; then
     install_package_category "Casks" "${CASKS[@]}"
 fi
 

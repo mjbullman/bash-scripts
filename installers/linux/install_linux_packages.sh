@@ -15,7 +15,7 @@ print_success "System updated successfully!"
 # INSTALL LINUX SPECIFIC PACKAGES.
 
 # install system utilities
-if [[ -n "${SYSTEM_UTILS_LINUX[@]}" ]]; then
+if [[ ${#SYSTEM_UTILS_LINUX[@]} -gt 0 ]]; then
     install_package_category "System Utilities Linux" "${SYSTEM_UTILS_LINUX[@]}"
 fi
 
@@ -23,27 +23,27 @@ fi
 # INSTALL SHARED PACKAGES
 
 # install system utilities
-if [[ -n "${SYSTEM_UTILS[@]}" ]]; then
+if [[ ${#SYSTEM_UTILS[@]} -gt 0 ]]; then
     install_package_category "System Utilities" "${SYSTEM_UTILS[@]}"
 fi
 
 # install development tools (if defined)
-if [[ -n "${NETWORKING_TOOLS[@]}" ]]; then
+if [[ ${#NETWORKING_TOOLS[@]} -gt 0 ]]; then
     install_package_category "Networking Tools" "${NETWORKING_TOOLS[@]}"
 fi
 
 # install development tools (if defined)
-if [[ -n "${DEV_TOOLS[@]}" ]]; then
+if [[ ${#DEV_TOOLS[@]} -gt 0 ]]; then
     install_package_category "Development Tools" "${DEV_TOOLS[@]}"
 fi
 
 # install casks (if defined)
-if [[ -n "${CASKS[@]}" ]]; then
+if [[ ${#CASKS[@]} -gt 0 ]]; then
     install_package_category "Casks" "${CASKS[@]}"
 fi
 
 # install AI tools (if defined)
-if [[ -n "${AI_CLI[@]}" ]]; then
+if [[ ${#AI_CLI[@]} -gt 0 ]]; then
     # install claude code
     curl -fsSL https://claude.ai/install.sh | bash
     # install opencode
