@@ -4,9 +4,7 @@ RED_TEXT="\033[1;91m"      # Bright Red (Material Red 500)
 GREEN_TEXT="\033[1;92m"    # Bright Green (Material Green 500)
 YELLOW_TEXT="\033[1;93m"   # Bright Yellow (Material Amber 500)
 BLUE_TEXT="\033[1;94m"     # Bright Blue (Material Blue 500)
-MAGENTA_TEXT="\033[1;95m"  # Bright Magenta (Material Pink 500)
 CYAN_TEXT="\033[1;96m"     # Bright Cyan (Material Teal 500)
-GRAY_TEXT="\033[1;90m"     # Bright Gray (for muted text)
 RESET_TEXT="\033[0m"
 
 function print_install_message() {
