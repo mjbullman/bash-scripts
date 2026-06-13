@@ -15,13 +15,17 @@ source "$HERE/pkg_utils.sh"
 if [[ "$PLATFORM" == "macos" ]]; then
     # shellcheck source=packages.macos.conf
     source "$HERE/packages.macos.conf"
+    ESSENTIALS_EXTRA=("${ESSENTIALS_MACOS[@]}")
+    SHELL_ENHANCE_EXTRA=("${SHELL_ENHANCE_MACOS[@]}")
+    TERMINAL_TUIS_EXTRA=("${TERMINAL_TUIS_MACOS[@]}")
     LANG_TOOLING_EXTRA=("${LANG_TOOLING_MACOS[@]}")
-    ESSENTIALS_EXTRA=()
 else
     # shellcheck source=packages.linux.conf
     source "$HERE/packages.linux.conf"
-    LANG_TOOLING_EXTRA=()
     ESSENTIALS_EXTRA=("${ESSENTIALS_LINUX[@]}")
+    SHELL_ENHANCE_EXTRA=()
+    TERMINAL_TUIS_EXTRA=()
+    LANG_TOOLING_EXTRA=()
 fi
 
 usage() {
@@ -98,20 +102,36 @@ print_section "Updating System"
 update_system
 print_success "System updated successfully!"
 
-[[ $SEL_ESSENTIALS   -eq 1 ]] && install_package_category "Essentials"         "${ESSENTIALS[@]}" "${ESSENTIALS_EXTRA[@]}"
-[[ $SEL_SHELL        -eq 1 ]] && install_package_category "Shell Enhancements" "${SHELL_ENHANCE[@]}"
-[[ $SEL_TUIS         -eq 1 ]] && install_package_category "Terminal TUIs"      "${TERMINAL_TUIS[@]}"
-[[ $SEL_NETWORKING   -eq 1 ]] && install_package_category "Networking"         "${NETWORKING[@]}"
-[[ $SEL_LANGUAGES    -eq 1 ]] && install_package_category "Languages"          "${LANGUAGES[@]}"
-[[ $SEL_LANG_TOOLING -eq 1 ]] && install_package_category "Language Tooling"   "${LANG_TOOLING[@]}" "${LANG_TOOLING_EXTRA[@]}"
-[[ $SEL_DEV          -eq 1 ]] && install_package_category "Dev Core"           "${DEV_CORE[@]}"
-[[ $SEL_CLOUD        -eq 1 ]] && install_package_category "Cloud CLIs"         "${CLOUD_CLI[@]}"
-[[ $SEL_DEVOPS       -eq 1 ]] && install_package_category "DevOps"             "${DEVOPS[@]}"
-[[ $SEL_DB           -eq 1 ]] && install_package_category "Databases"          "${DATABASES[@]}"
+[[ $SEL_ESSENTIALS -eq 1 ]] && install_package_category "Essentials" "${ESSENTIALS[@]}" "${ESSENTIALS_EXTRA[@]}"
+
+if [[ $SEL_SHELL -eq 1 ]]; then
+    pre_install_shell
+    install_package_category "Shell Enhancements" "${SHELL_ENHANCE[@]}" "${SHELL_ENHANCE_EXTRA[@]}"
+fi
+
+if [[ $SEL_TUIS -eq 1 ]]; then
+    pre_install_tuis
+    install_package_category "Terminal TUIs" "${TERMINAL_TUIS[@]}" "${TERMINAL_TUIS_EXTRA[@]}"
+fi
+
+[[ $SEL_NETWORKING   -eq 1 ]] && install_package_category "Networking"       "${NETWORKING[@]}"
+[[ $SEL_LANGUAGES    -eq 1 ]] && install_package_category "Languages"        "${LANGUAGES[@]}"
+
+if [[ $SEL_LANG_TOOLING -eq 1 ]]; then
+    pre_install_lang_tooling
+    install_package_category "Language Tooling" "${LANG_TOOLING[@]}" "${LANG_TOOLING_EXTRA[@]}"
+fi
+
+[[ $SEL_DEV    -eq 1 ]] && install_package_category "Dev Core"   "${DEV_CORE[@]}"
+[[ $SEL_CLOUD  -eq 1 ]] && install_package_category "Cloud CLIs" "${CLOUD_CLI[@]}"
+[[ $SEL_DEVOPS -eq 1 ]] && install_package_category "DevOps"     "${DEVOPS[@]}"
+[[ $SEL_DB     -eq 1 ]] && install_package_category "Databases"  "${DATABASES[@]}"
+
 if [[ $SEL_AI -eq 1 ]]; then
     pre_install_ai
     install_package_category "AI CLIs" "${AI_CLI[@]}"
 fi
+
 [[ $SEL_FONTS -eq 1 ]] && install_package_category "Fonts" "${FONTS[@]}"
 
 print_banner "Installation Complete!"
