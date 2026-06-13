@@ -11,16 +11,12 @@ A collection of shell scripts for automating development environment setup on ma
 Scripts are executed directly — there is no build system, Makefile, or test framework:
 
 ```bash
-# macOS package installation (no flags = ESSENTIALS only)
-bash installers/mac/install_brew_packages.sh
-bash installers/mac/install_brew_packages.sh --all
-bash installers/mac/install_brew_packages.sh --essentials --dev --ai
-bash installers/mac/install_brew_packages.sh --help
-
-# Linux package installation (no flags = ESSENTIALS + ESSENTIALS_LINUX)
-bash installers/linux/install_linux_packages.sh
-bash installers/linux/install_linux_packages.sh --all
-bash installers/linux/install_linux_packages.sh --help
+# Unified package installer (auto-detects macOS vs Linux)
+# No flags = ESSENTIALS only (plus ESSENTIALS_LINUX on Linux)
+bash installers/install.sh
+bash installers/install.sh --all
+bash installers/install.sh --essentials --dev --ai
+bash installers/install.sh --help
 
 # GitHub SSH key setup
 bash github/ssh_auth_setup.sh
@@ -50,10 +46,10 @@ shellcheck <script.sh>
 - `utils/print.sh` — Colored terminal output functions (`print_success`, `print_error`, `print_warning`, `print_info`, `print_section`, `print_banner`, `print_install_message`, `print_update_message`). This is the base dependency for most scripts.
 - `utils/folders.sh` — `folder_exists()` and `folder_empty()` helpers.
 
-### Platform-Specific Utility Libraries
+### Platform Abstraction
 
-- `installers/mac/brew_utils.sh` — Homebrew helpers: `install_homebrew`, `update_homebrew`, `check_package_installed`, `install_packages`, `install_package_category`.
-- `installers/linux/bash_utils.sh` — apt helpers with the same interface as brew_utils.sh.
+- `installers/pkg_utils.sh` — Detects the host OS (Darwin/Linux) and exposes a unified interface used by `install.sh`: `bootstrap_pkg_manager`, `update_system`, `install_package_category`, `pre_install_ai`. Internally dispatches to brew on macOS and apt on Linux.
+- `installers/install.sh` — Single entrypoint. Parses flags, sources `packages.shared.conf` plus the matching platform conf, and dispatches selected categories.
 
 ### Package Configuration
 
@@ -63,16 +59,14 @@ Packages are defined in `.conf` files as bash arrays and sourced by the installe
 - `installers/packages.macos.conf` — `LANG_TOOLING_MACOS` (extends `LANG_TOOLING`)
 - `installers/packages.linux.conf` — `ESSENTIALS_LINUX` (extends `ESSENTIALS`)
 
-Installers map one CLI flag per category (`--essentials`, `--shell`, `--tuis`, `--networking`, `--languages`, `--lang-tooling`, `--dev`, `--cloud`, `--devops`, `--db`, `--ai`, `--fonts`), plus `--all`. **Default with no flags is `--essentials` only** — a deliberate change from the previous "install everything" behavior.
+The installer maps one CLI flag per category (`--essentials`, `--shell`, `--tuis`, `--networking`, `--languages`, `--lang-tooling`, `--dev`, `--cloud`, `--devops`, `--db`, `--ai`, `--fonts`), plus `--all`. **Default with no flags is `--essentials` only** — a deliberate change from the previous "install everything" behavior.
 
 ### Dependency Flow
 
 ```
 utils/print.sh
-    └── installers/mac/brew_utils.sh
-            └── installers/mac/install_brew_packages.sh  (also sources *.conf files)
-    └── installers/linux/bash_utils.sh
-            └── installers/linux/install_linux_packages.sh  (also sources *.conf files)
+    └── installers/pkg_utils.sh         (platform-detected brew/apt wrappers)
+            └── installers/install.sh   (also sources *.conf files)
     └── github/ssh_auth_setup.sh
     └── alias/add_linux_alias.sh
 ```

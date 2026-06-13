@@ -59,8 +59,7 @@ BashScripts automates the setup and maintenance of development environments acro
 
 | Directory | Script | Description |
 |-----------|--------|-------------|
-| `installers/mac/` | `install_brew_packages.sh` | Installs Homebrew and packages from `.conf` files |
-| `installers/linux/` | `install_linux_packages.sh` | Installs apt packages and AI CLI tools |
+| `installers/` | `install.sh` | Unified installer: detects platform, installs Homebrew/apt packages from `.conf` files |
 | `github/` | `ssh_auth_setup.sh` | Generates an ed25519 SSH key and tests GitHub connection |
 | `alias/` | `add_linux_alias.sh` | Adds common bash aliases to `~/.bash_aliases` |
 | `scripts/` | `dev_env.sh` | Launches a tmux dev session (nvim, claude, lazygit) |
@@ -79,8 +78,8 @@ BashScripts/
 ├── alias/
 ├── github/
 ├── installers/
-│   ├── linux/
-│   ├── mac/
+│   ├── install.sh
+│   ├── pkg_utils.sh
 │   ├── packages.shared.conf
 │   ├── packages.macos.conf
 │   └── packages.linux.conf
@@ -113,21 +112,18 @@ cd BashScripts
 
 ## Usage
 
-### macOS — Install Homebrew Packages
+### Install Packages (macOS or Linux)
 
 ```bash
-bash installers/mac/install_brew_packages.sh
+bash installers/install.sh                     # essentials only
+bash installers/install.sh --all
+bash installers/install.sh --essentials --dev --ai
+bash installers/install.sh --help
 ```
 
-Installs Homebrew if not present, then installs all packages listed in the `.conf` files.
-
-### Linux — Install apt Packages
-
-```bash
-bash installers/linux/install_linux_packages.sh
-```
-
-Installs apt packages and any AI CLI tools defined in the `.conf` files.
+Detects the platform automatically. On macOS it installs Homebrew if missing,
+then installs the selected categories. On Linux it uses apt and bootstraps
+the AI CLI installers when `--ai` is passed.
 
 ### GitHub — SSH Key Setup
 
