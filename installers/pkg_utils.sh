@@ -34,10 +34,11 @@ if [[ "$PLATFORM" == "macos" ]]; then
     function update_system()          { brew update && brew upgrade && brew cleanup; }
     function _check_installed()       { brew list | grep -q "$1"; }
     function _install_one()           { brew install "$1" > /dev/null 2>&1; }
-    function pre_install_shell()      { :; }
-    function pre_install_tuis()       { :; }
-    function pre_install_lang_tooling() { :; }
-    function pre_install_ai()         { :; }
+    function pre_install_essentials()    { :; }
+    function pre_install_shell()         { :; }
+    function pre_install_tuis()          { :; }
+    function pre_install_lang_tooling()  { :; }
+    function pre_install_ai()            { :; }
 
 # ---------------------------------------------------------------------------
 # Linux (apt)
@@ -63,15 +64,31 @@ else
     }
 
     function _check_installed() {
+        [[ "$1" == "neovim" ]] && { command -v nvim &>/dev/null; return; }
         local apt_name
         apt_name="$(_linux_apt_name "$1")"
         dpkg -l | grep -q "$apt_name"
     }
 
     function _install_one() {
+        [[ "$1" == "neovim" ]] && { _install_neovim_from_github; return; }
         local apt_name
         apt_name="$(_linux_apt_name "$1")"
         sudo apt-get install -y "$apt_name" > /dev/null 2>&1
+    }
+
+    function _install_neovim_from_github() {
+        local arch tarball url
+        case "$(uname -m)" in
+            x86_64)        arch="x86_64" ;;
+            aarch64|arm64) arch="arm64" ;;
+            *)             arch="x86_64" ;;
+        esac
+        tarball="nvim-linux-${arch}.tar.gz"
+        url="https://github.com/neovim/neovim/releases/latest/download/${tarball}"
+        curl -Lo "/tmp/${tarball}" "$url" > /dev/null 2>&1 \
+            && sudo tar -C /usr/local --strip-components=1 -xzf "/tmp/${tarball}" \
+            && rm -f "/tmp/${tarball}"
     }
 
     function pre_install_shell() {

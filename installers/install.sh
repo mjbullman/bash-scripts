@@ -102,7 +102,10 @@ print_section "Updating System"
 update_system
 print_success "System updated successfully!"
 
-[[ $SEL_ESSENTIALS -eq 1 ]] && install_package_category "Essentials" "${ESSENTIALS[@]}" "${ESSENTIALS_EXTRA[@]}"
+if [[ $SEL_ESSENTIALS -eq 1 ]]; then
+    pre_install_essentials
+    install_package_category "Essentials" "${ESSENTIALS[@]}" "${ESSENTIALS_EXTRA[@]}"
+fi
 
 if [[ $SEL_SHELL -eq 1 ]]; then
     pre_install_shell
