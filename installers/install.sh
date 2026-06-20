@@ -23,7 +23,7 @@ else
     # shellcheck source=packages.linux.conf
     source "$HERE/packages.linux.conf"
     ESSENTIALS_EXTRA=("${ESSENTIALS_LINUX[@]}")
-    SHELL_ENHANCE_EXTRA=()
+    SHELL_ENHANCE_EXTRA=("${SHELL_ENHANCE_LINUX[@]}")
     TERMINAL_TUIS_EXTRA=()
     LANG_TOOLING_EXTRA=()
 fi
@@ -110,6 +110,7 @@ fi
 if [[ $SEL_SHELL -eq 1 ]]; then
     pre_install_shell
     install_package_category "Shell Enhancements" "${SHELL_ENHANCE[@]}" "${SHELL_ENHANCE_EXTRA[@]}"
+    set_default_shell_zsh
 fi
 
 if [[ $SEL_TUIS -eq 1 ]]; then

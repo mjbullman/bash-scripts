@@ -8,6 +8,7 @@
 #   - pre_install_tuis             Hook: bootstrap TUI tools not in apt
 #   - pre_install_lang_tooling     Hook: bootstrap lang tools not in apt
 #   - pre_install_ai               Hook: bootstrap AI CLIs not in apt
+#   - set_default_shell_zsh        Switch the current user's login shell to zsh
 
 # shellcheck source=../utils/print.sh
 source "$(dirname "${BASH_SOURCE[0]}")/../utils/print.sh"
@@ -193,4 +194,31 @@ function install_package_category() {
         fi
         echo
     done
+}
+
+function set_default_shell_zsh() {
+    print_section "Setting default shell to zsh"
+
+    local zsh_path
+    zsh_path="$(command -v zsh)"
+    if [[ -z "$zsh_path" ]]; then
+        print_error "zsh not found on PATH — skipping shell change"
+        return
+    fi
+
+    if [[ "$SHELL" == "$zsh_path" ]]; then
+        print_info "Default shell is already zsh ($zsh_path), skipping..."
+        return
+    fi
+
+    if ! grep -qx "$zsh_path" /etc/shells; then
+        print_info "Adding $zsh_path to /etc/shells"
+        echo "$zsh_path" | sudo tee -a /etc/shells > /dev/null
+    fi
+
+    if chsh -s "$zsh_path"; then
+        print_success "Default shell changed to $zsh_path (takes effect on next login)"
+    else
+        print_error "Failed to change default shell — run: chsh -s $zsh_path"
+    fi
 }
