@@ -9,6 +9,7 @@
 #   - pre_install_lang_tooling     Hook: bootstrap lang tools not in apt
 #   - pre_install_ai               Hook: bootstrap AI CLIs not in apt
 #   - set_default_shell_zsh        Switch the current user's login shell to zsh
+#   - hush_login                   Silence the login MOTD (Linux only; no-op on macOS)
 
 # shellcheck source=../utils/print.sh
 source "$(dirname "${BASH_SOURCE[0]}")/../utils/print.sh"
@@ -37,6 +38,7 @@ if [[ "$PLATFORM" == "macos" ]]; then
     function _install_one()           { brew install "$1" > /dev/null 2>&1; }
     function pre_install_essentials()    { :; }
     function pre_install_shell()         { :; }
+    function hush_login()                { :; }
     function pre_install_tuis()          { :; }
     function pre_install_lang_tooling()  { :; }
     function pre_install_ai()            { :; }
@@ -169,6 +171,17 @@ else
         print_section "Bootstrapping AI CLI installers"
         curl -fsSL https://claude.ai/install.sh | bash
         curl -fsSL https://opencode.ai/install | bash
+    }
+
+    function hush_login() {
+        print_section "Suppressing login MOTD"
+        if [[ -f "$HOME/.hushlogin" ]]; then
+            print_info "~/.hushlogin already present, skipping..."
+        else
+            touch "$HOME/.hushlogin" \
+                && print_success "Created ~/.hushlogin — MOTD silenced on next login" \
+                || print_error "Failed to create ~/.hushlogin"
+        fi
     }
 
 fi
