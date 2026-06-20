@@ -111,6 +111,7 @@ if [[ $SEL_SHELL -eq 1 ]]; then
     pre_install_shell
     install_package_category "Shell Enhancements" "${SHELL_ENHANCE[@]}" "${SHELL_ENHANCE_EXTRA[@]}"
     set_default_shell_zsh
+    hush_login
 fi
 
 if [[ $SEL_TUIS -eq 1 ]]; then
