@@ -67,14 +67,24 @@ else
     }
 
     function _check_installed() {
-        [[ "$1" == "neovim" ]] && { command -v nvim &>/dev/null; return; }
+        case "$1" in
+            neovim)     command -v nvim &>/dev/null; return ;;
+            lazygit)    command -v lazygit &>/dev/null; return ;;
+            lazydocker) command -v lazydocker &>/dev/null; return ;;
+            uv)         command -v uv &>/dev/null; return ;;
+        esac
         local apt_name
         apt_name="$(_linux_apt_name "$1")"
         dpkg -l | grep -q "$apt_name"
     }
 
     function _install_one() {
-        [[ "$1" == "neovim" ]] && { _install_neovim_from_github; return; }
+        case "$1" in
+            neovim)     _install_neovim_from_github; return ;;
+            lazygit)    _install_lazygit_from_github; return ;;
+            lazydocker) _install_lazydocker_from_github; return ;;
+            uv)         _install_uv; return ;;
+        esac
         local apt_name
         apt_name="$(_linux_apt_name "$1")"
         sudo apt-get install -y "$apt_name" > /dev/null 2>&1
@@ -109,34 +119,36 @@ else
         echo
     }
 
-    function pre_install_tuis() {
-        print_section "Bootstrapping: Lazygit"
-        if command -v lazygit &> /dev/null; then
-            print_info "lazygit is already installed, skipping..."
-        else
-            print_install_message "lazygit"
-            local version arch
-            version=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" \
-                      | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
-            case "$(uname -m)" in
-                x86_64)          arch="x86_64" ;;
-                aarch64|arm64)   arch="arm64" ;;
-                armv*l)          arch="armv6" ;;
-                *)               arch="x86_64" ;;
-            esac
-            if curl -Lo /tmp/lazygit.tar.gz \
-                "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${version}_Linux_${arch}.tar.gz" \
-                > /dev/null 2>&1 \
-               && tar xf /tmp/lazygit.tar.gz -C /tmp lazygit \
-               && sudo install /tmp/lazygit /usr/local/bin/lazygit; then
-                print_success "lazygit installed successfully!"
-            else
-                print_error "Failed to install lazygit"
-            fi
-            rm -f /tmp/lazygit.tar.gz /tmp/lazygit
-        fi
-        echo
+    function _install_lazygit_from_github() {
+        local version arch
+        version=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" \
+                  | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
+        case "$(uname -m)" in
+            x86_64)        arch="x86_64" ;;
+            aarch64|arm64) arch="arm64" ;;
+            armv*l)        arch="armv6" ;;
+            *)             arch="x86_64" ;;
+        esac
+        curl -Lo /tmp/lazygit.tar.gz \
+            "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${version}_Linux_${arch}.tar.gz" \
+            > /dev/null 2>&1 \
+            && tar xf /tmp/lazygit.tar.gz -C /tmp lazygit \
+            && sudo install /tmp/lazygit /usr/local/bin/lazygit
+        local status=$?
+        rm -f /tmp/lazygit.tar.gz /tmp/lazygit
+        return $status
     }
+
+    # uv isn't reliably packaged in apt; use Astral's installer (into ~/.local/bin)
+    function _install_uv() {
+        curl -LsSf https://astral.sh/uv/install.sh | sh > /dev/null 2>&1
+    }
+
+    function _install_lazydocker_from_github() {
+        curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash > /dev/null 2>&1
+    }
+
+    function pre_install_tuis() { :; }
 
     function pre_install_lang_tooling() {
         # fnm
@@ -165,6 +177,40 @@ else
             fi
         fi
         echo
+
+        # Make cargo available in this shell if rustup was just installed
+        # shellcheck disable=SC1091
+        [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+
+        # cargo-binstall (prebuilt-binary installer for cargo crates)
+        if command -v cargo-binstall &> /dev/null; then
+            print_info "cargo-binstall is already installed, skipping..."
+        else
+            print_install_message "cargo-binstall"
+            if curl -L --proto '=https' --tlsv1.2 -sSf \
+                https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh \
+                | bash > /dev/null 2>&1; then
+                print_success "cargo-binstall installed successfully!"
+            else
+                print_error "Failed to install cargo-binstall"
+            fi
+        fi
+        echo
+
+        # tree-sitter CLI (needed by nvim-treesitter for parser builds)
+        if command -v tree-sitter &> /dev/null; then
+            print_info "tree-sitter is already installed, skipping..."
+        elif command -v cargo-binstall &> /dev/null; then
+            print_install_message "tree-sitter-cli"
+            if cargo binstall -y tree-sitter-cli > /dev/null 2>&1; then
+                print_success "tree-sitter-cli installed successfully!"
+            else
+                print_error "Failed to install tree-sitter-cli"
+            fi
+        else
+            print_error "Skipping tree-sitter-cli: cargo-binstall not available"
+        fi
+        echo
     }
 
     function pre_install_ai() {
@@ -176,11 +222,11 @@ else
     function hush_login() {
         print_section "Suppressing login MOTD"
         if [[ -f "$HOME/.hushlogin" ]]; then
-            print_info "~/.hushlogin already present, skipping..."
+            print_info "$HOME/.hushlogin already present, skipping..."
+        elif touch "$HOME/.hushlogin"; then
+            print_success "Created $HOME/.hushlogin — MOTD silenced on next login"
         else
-            touch "$HOME/.hushlogin" \
-                && print_success "Created ~/.hushlogin — MOTD silenced on next login" \
-                || print_error "Failed to create ~/.hushlogin"
+            print_error "Failed to create $HOME/.hushlogin"
         fi
     }
 

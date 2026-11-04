@@ -18,6 +18,7 @@ if [[ "$PLATFORM" == "macos" ]]; then
     ESSENTIALS_EXTRA=("${ESSENTIALS_MACOS[@]}")
     SHELL_ENHANCE_EXTRA=("${SHELL_ENHANCE_MACOS[@]}")
     TERMINAL_TUIS_EXTRA=("${TERMINAL_TUIS_MACOS[@]}")
+    LANGUAGES_EXTRA=()
     LANG_TOOLING_EXTRA=("${LANG_TOOLING_MACOS[@]}")
 else
     # shellcheck source=packages.linux.conf
@@ -25,6 +26,7 @@ else
     ESSENTIALS_EXTRA=("${ESSENTIALS_LINUX[@]}")
     SHELL_ENHANCE_EXTRA=("${SHELL_ENHANCE_LINUX[@]}")
     TERMINAL_TUIS_EXTRA=()
+    LANGUAGES_EXTRA=("${LANGUAGES_LINUX[@]}")
     LANG_TOOLING_EXTRA=()
 fi
 
@@ -120,7 +122,7 @@ if [[ $SEL_TUIS -eq 1 ]]; then
 fi
 
 [[ $SEL_NETWORKING   -eq 1 ]] && install_package_category "Networking"       "${NETWORKING[@]}"
-[[ $SEL_LANGUAGES    -eq 1 ]] && install_package_category "Languages"        "${LANGUAGES[@]}"
+[[ $SEL_LANGUAGES    -eq 1 ]] && install_package_category "Languages"        "${LANGUAGES[@]}" "${LANGUAGES_EXTRA[@]}"
 
 if [[ $SEL_LANG_TOOLING -eq 1 ]]; then
     pre_install_lang_tooling

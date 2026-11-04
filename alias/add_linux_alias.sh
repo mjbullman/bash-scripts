@@ -35,6 +35,7 @@ add_alias "alias la='ls -A'" la
 add_alias "alias l='ls -CF'" l
 add_alias "alias cls='clear'" cls
 add_alias "alias c='clear'" c
+command -v batcat >/dev/null && add_alias "alias cat='batcat --paging=never'" cat
 
 # Git Shortcuts
 add_alias "alias gs='git status'" gs
