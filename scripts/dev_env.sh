@@ -11,11 +11,7 @@ else
     # create new session and start nvim
     tmux new-session -d -s "${SESSION_NAME}" -n nvim nvim
 
-    # split nvim window horizontally (top/bottom)
-    sleep 1
-    tmux split-window -v -t "${SESSION_NAME}"
-
-    # create new window and run cluade code
+    # create new window and run claude code
     sleep 1
     tmux new-window -t "${SESSION_NAME}" claude
 
@@ -23,9 +19,13 @@ else
     sleep 1
     tmux new-window -t "${SESSION_NAME}" lazygit
 
+    # create new window with a plain shell
+    sleep 1
+    tmux new-window -t "${SESSION_NAME}" -n terminal
+
     # focus nvim window
     tmux select-window -t "${SESSION_NAME}:nvim"
 
-    # attache to session
+    # attach to session
     tmux attach -t "${SESSION_NAME}"
 fi
